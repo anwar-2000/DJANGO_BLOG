@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block cssFiles %}
+        <link rel="stylesheet" href="{% static "blog/post.css" %}">
+        <link rel="stylesheet" href="{% static "blog/index.css" %}">
+{% endblock %}
+
+{% block title %}
+    MY BLOG
+{% endblock %}
+
+{% block content %}
+        <section id="welcome">
+                <header>
+                        <img src="{% static "blog/images/mountains.jpg" %}" alt="Anwar - the Author Of This Blog">
+                        <h2>ANWAR'S BLOG</h2>
+                </header>
+                <p>
+                    Hi , Am Anwar and i love to blog about tech and the world
+                </p>
+        </section>
+
+        <section id="latest-posts">
+                <h2>My Latest Thoughts : </h2>
+
+                <ul>
+                        {% for post in posts %}
+                                     {% include "blog/includes/post.html" %}
+                        {% endfor %}
+                </ul>
+        </section>
+
+        <section id="about">
+            <h2>What I Do !</h2>
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat, maxime!</p>
+        </section>
+    {% endblock %}
