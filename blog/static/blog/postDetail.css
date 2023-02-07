@@ -34,6 +34,19 @@ body {
     color: white;
   }
   
+
+  #tags {
+    background-color: white !important;
+    margin: 0.5rem;
+    width: 2rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+    transition: all ease-in 0.4s;
+  }
+  #tags:hover{
+    background-color: black !important;
+    color: white;
+  }
   #summary article img {
     width: 12rem;
     height: 12rem;
@@ -47,6 +60,10 @@ body {
     font-weight: bold;
   }
   
+  #email {
+    color: rgb(122, 119, 119);
+    text-decoration: none;
+  }
   #summary time {
     font-weight: bold;
   } 

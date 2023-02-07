@@ -8,7 +8,8 @@ class PostAdmin(admin.ModelAdmin):
     #slug will be generated auto... and not editable through admin Panel
     #readonly_fields = ("slug",)
     prepopulated_fields = {"slug" : ("title",)}
-    list_filter = ("date","author",)
+    list_filter = ("date","author","tag")
+    list_display= ("title" , "author" , "date",)
 
 admin.site.register(Post,PostAdmin)
 admin.site.register(Author)
