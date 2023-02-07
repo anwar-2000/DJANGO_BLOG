@@ -1,6 +1,7 @@
 from datetime import date
 from django.shortcuts import render
 
+from blog.models import Post , Author , Tag
 
 all_posts = [
     {
@@ -26,7 +27,7 @@ all_posts = [
     },
     {
         "slug": "programming-is-fun",
-        "image": "coding.jpg",
+        "image": "mountains.jpg",
         "author": "Maximilian",
         "date": date(2022, 3, 10),
         "title": "Programming Is Great!",
@@ -47,7 +48,7 @@ all_posts = [
     },
     {
         "slug": "into-the-woods",
-        "image": "woods.jpg",
+        "image": "mountains.jpg",
         "author": "Maximilian",
         "date": date(2020, 8, 5),
         "title": "Nature At Its Best",
@@ -74,7 +75,9 @@ def getDate(post):
 
 
 def startingPage(request) :
-    sorted_posts = sorted(all_posts,key=getDate)
+    #sorted_posts = sorted(all_posts,key=getDate)
+    allposts = Post.objects.all() #getting all the posts objects
+    sorted_posts = sorted(allposts)
     latest_posts = sorted_posts[-3:]
     return render(request,"blog/index.html",{
         "posts" : latest_posts
