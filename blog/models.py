@@ -1,14 +1,24 @@
 from django.db import models
-from django.utils.text import slugify 
+from django.utils.text import slugify
 from django.core.validators import MinLengthValidator
+
+
 # Create your models here.
 
+class Comment(models.Model):
+    username = models.TextField(max_length=60,blank=True,null=False)
+    text = models.TextField(max_length=200 ,blank=True,null=False)
+
+    def __str__(self):
+        return f"{self.username} => {self.text}"
+    
 
 class Tag(models.Model):
     caption = models.CharField(max_length=15)
 
     def __str__(self):
         return f"#{self.caption}"
+
 
 class Author(models.Model):
     firstName = models.CharField(max_length=50)
@@ -18,19 +28,21 @@ class Author(models.Model):
     def __str__(self):
         return f"{self.firstName} {self.lastName}"
 
+
 class Post(models.Model):
     title = models.CharField(max_length=70)
     excerpt = models.CharField(max_length=120)
-    author = models.ForeignKey(Author , on_delete=models.SET_NULL ,null=True,related_name="authorPosts")
-    imageName = models.CharField(max_length=120)
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, related_name="authorPosts")
+    imageName = models.ImageField(upload_to="images")
     date = models.DateField(auto_now=True)
-    slug=models.SlugField(db_index=True,null=False)
+    slug = models.SlugField(db_index=True, null=False)
     content = models.TextField(validators=[MinLengthValidator(10)])
-    tag = models.ManyToManyField(Tag,blank=True)
+    tag = models.ManyToManyField(Tag, blank=True, related_name='Tags_Post')
+    #comments = models.ForeignKey(Comment,on_delete=models.CASCADE,null=False)
 
     def __str__(self):
         return f"{self.title} ---- {self.date}"
 
-    def save(self,*args, **kwargs): #this function is to auto populate slug field based on the title
-        self.slug=slugify(self.title)
+    def save(self, *args, **kwargs):  # this function is to auto populate slug field based on the title
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
