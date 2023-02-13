@@ -5,13 +5,9 @@ from django.core.validators import MinLengthValidator
 
 # Create your models here.
 
-class Comment(models.Model):
-    username = models.TextField(max_length=60,blank=True,null=False)
-    text = models.TextField(max_length=200 ,blank=True,null=False)
 
-    def __str__(self):
-        return f"{self.username} => {self.text}"
-    
+
+
 
 class Tag(models.Model):
     caption = models.CharField(max_length=15)
@@ -38,7 +34,6 @@ class Post(models.Model):
     slug = models.SlugField(db_index=True, null=False)
     content = models.TextField(validators=[MinLengthValidator(10)])
     tag = models.ManyToManyField(Tag, blank=True, related_name='Tags_Post')
-    #comments = models.ForeignKey(Comment,on_delete=models.CASCADE,null=False)
 
     def __str__(self):
         return f"{self.title} ---- {self.date}"
@@ -46,3 +41,13 @@ class Post(models.Model):
     def save(self, *args, **kwargs):  # this function is to auto populate slug field based on the title
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+
+class Comment(models.Model):
+    username = models.TextField(max_length=60)
+    email = models.EmailField(default=None)
+    text = models.TextField(max_length=200)
+    post = models.ForeignKey(Post,on_delete=models.CASCADE , related_name="comments",default=None)
+    def __str__(self):
+        return f"{self.username} => {self.email}"
+    

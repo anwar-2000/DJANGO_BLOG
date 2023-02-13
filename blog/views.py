@@ -1,9 +1,10 @@
 from datetime import date
 from django.shortcuts import render , get_object_or_404
-
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from blog.models import Post 
 
-from django.views.generic import ListView , DetailView , TemplateView
+from django.views.generic import ListView , View , TemplateView
 
 from .forms import CommentForm
 
@@ -34,20 +35,35 @@ class posts(ListView):
     
     
 
-class postDetails(DetailView):
-    template_name ="blog/post-detail.html"
-    model = Post
-    slug_field ="slug"
-    slug_url_kwarg ="slug"
-
-    def get_queryset(self):
-        return Post.objects.all()
-    def get_context_data(self, **kwargs):
-        context =  super().get_context_data(**kwargs)
-        post = self.get_object()
-        context['postTags'] = post.tag.all() #with related name of tag field
-        form = CommentForm()
-        context['form'] =form
-        return context
+class postDetails(View):
     
+    def get(self,request,slug):
+        post = Post.objects.get(slug=slug)
+        context={
+            "post" : post,
+            "postTags" : post.tag.all(),
+            "form" : CommentForm()
+        }
+        return render('blog/post-detail.html',context)
+
+    def post(self,request,slug):
+        post = Post.objects.get(slug=slug)
+
+        comment_form = CommentForm(request.POST)
+
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.post = post
+
+            comment.save()
+            return HttpResponseRedirect(reverse('postDetails-page',args=[slug]))
+        #else .....
+        
+        context={
+            "post" : post,
+            "postTags" : post.tag.all(),
+            "form" : comment_form #saving user entered data
+        }
+        return render('blog/post-detail.html',context)
+            
     

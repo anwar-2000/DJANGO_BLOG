@@ -31,9 +31,15 @@
 
                 <main>
                     <h1>COMMENTS : </h1>
-                        <form>
+                        <form id="comment-form" action="{% url 'postDetails-page' post.slug %}" method="POST">
                             {% csrf_token %}
-                            {{form}}
+                            {% for field in form %}
+                            <div class="form-control">
+                                {{field.label_tag}}
+                                {{field}}
+                                {{field.errors}}
+                            </div>
+                            {% endfor %}
                             <button type="submit"> ADD COMMENT</button>
                         </form>
                 </main>
